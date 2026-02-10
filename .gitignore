@@ -179,6 +179,6 @@ package.zip
 requirements.txt
 
 # Widget build artifacts
-assets/
+# assets/
 tag-interaction/node_modules/
 tag-interaction/dist/

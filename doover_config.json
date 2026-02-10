@@ -1,51 +1,68 @@
 {
     "tag_interaction_widget": {
         "name": "tag_interaction_widget",
-        "display_name": "tag-interaction-widget",
-        "type": "DEV",
+        "display_name": "Tag Interaction Widget",
+        "type": "PRO",
         "visibility": "PUB",
         "allow_many": true,
         "description": "Allows a user to read/write tag values using a widget",
         "long_description": "README.md",
         "depends_on": [],
-        "owner_org_key": "FIX-ME",
-        "image_name": "ghcr.io/getdoover/tag-interaction-widget:main",
-        "container_registry_profile_key": "FIX-ME",
-        "build_args": "--platform linux/amd64,linux/arm64",
+        "handler": "src.tag_interaction_widget.handler",
+        "lambda_config": {
+            "Runtime": "python3.13",
+            "Timeout": 300,
+            "MemorySize": 128,
+            "Handler": "src.tag_interaction_widget.handler"
+        },
+        "organisation_id": null,
+        "key": null,
+        "owner_org_id": null,
+        "code_repo_id": null,
+        "container_registry_profile_id": null,
+        "repo_branch": "main",
+        "image_name": null,
+        "icon_url": "",
+        "staging_config": {},
+        "export_config_command": null,
+        "run_command": null,
+        "lambda_arn": null,
         "config_schema": {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
             "$id": "",
             "title": "Application Config",
             "type": "object",
-            "properties": {
-                "digital_outputs_enabled": {
-                    "title": "Digital Outputs Enabled",
-                    "x-name": "digital_outputs_enabled",
-                    "x-hidden": false,
-                    "type": "boolean",
-                    "default": true
-                },
-                "a_funny_message": {
-                    "title": "A Funny Message",
-                    "x-name": "a_funny_message",
-                    "x-hidden": false,
-                    "type": "string"
-                },
-                "simulator_app_key": {
-                    "format": "doover-application",
-                    "title": "Simulator App Key",
-                    "x-name": "simulator_app_key",
-                    "x-hidden": false,
-                    "type": "string",
-                    "description": "The app key for the simulator"
-                }
-            },
+            "properties": {},
             "additionalElements": true,
-            "required": [
-                "a_funny_message",
-                "simulator_app_key"
-            ]
+            "required": []
         },
-        "organisation_id": "FIX-ME"
-    }
+        "id": "146790712870976269",
+        "banner_url": null
+    },
+    "file_deployments": {
+        "files": [
+            {
+                "name": "tag_interaction",
+                "file_dir": "assets/TagInteraction.js",
+                "mime_type": "text/javascript"
+            }
+        ]
+    },
+    "deployment_channel_messages": [
+        {
+            "channel_name": "ui_state",
+            "channel_message": {
+                "state": {
+                    "children": {
+                        "TagInteraction": {
+                            "type": "uiRemoteComponent",
+                            "name": "TagInteraction",
+                            "componentUrl": "tag_interaction",
+                            "children": {}
+                        }
+                    }
+                }
+            }
+        }
+    ]
 }

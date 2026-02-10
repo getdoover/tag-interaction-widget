@@ -1,16 +1,14 @@
 [project]
 name = "tag-interaction-widget"
 version = "0.1.0"
-description = "Add your description here"
+description = "Allows a user to read/write tag values using a widget"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "pydoover>=0.4.13",
-    "transitions>=0.9.2",
 ]
 
 [project.scripts]
-doover-app-run = "tag_interaction_widget:main"
 export-config = "tag_interaction_widget.app_config:export"
 
 [build-system]

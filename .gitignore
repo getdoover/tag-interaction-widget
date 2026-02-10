@@ -172,3 +172,13 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Build outputs
+packages_export/
+package.zip
+requirements.txt
+
+# Widget build artifacts
+assets/
+tag-interaction/node_modules/
+tag-interaction/dist/

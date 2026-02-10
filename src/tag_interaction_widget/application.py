@@ -1,55 +1,41 @@
 import logging
-import time
 
-from pydoover.docker import Application
-from pydoover import ui
+from pydoover.cloud.processor import ProcessorBase
 
 from .app_config import TagInteractionWidgetConfig
-from .app_ui import TagInteractionWidgetUI
-from .app_state import TagInteractionWidgetState
 
-log = logging.getLogger()
+log = logging.getLogger(__name__)
 
-class TagInteractionWidgetApplication(Application):
-    config: TagInteractionWidgetConfig  # not necessary, but helps your IDE provide autocomplete!
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class TagInteractionWidgetProcessor(ProcessorBase):
+    """
+    Tag Interaction Widget Processor.
 
-        self.started: float = time.time()
-        self.ui: TagInteractionWidgetUI = None
-        self.state: TagInteractionWidgetState = None
+    Minimal processor skeleton that receives channel messages and
+    can read/write tag values. Customize the process() method to
+    implement your logic.
+    """
 
-    async def setup(self):
-        self.ui = TagInteractionWidgetUI()
-        self.state = TagInteractionWidgetState()
-        self.ui_manager.add_children(*self.ui.fetch())
+    def setup(self):
+        """Called once before processing the message."""
+        self._config = TagInteractionWidgetConfig()
+        if self.deployment_config:
+            self._config._inject_deployment_config(self.deployment_config)
 
-    async def main_loop(self):
-        log.info(f"State is: {self.state.state}")
+    def process(self):
+        """Process the incoming message."""
+        if self.message is None:
+            log.info("No message to process")
+            return
 
-        # a random value we set inside our simulator. Go check it out in simulators/sample!
-        random_value = self.get_tag("random_value", self.config.sim_app_key.value)
-        log.info("Random value from simulator: %s", random_value)
+        data = self.message.data
+        log.info(f"Received message for agent {self.agent_id}")
 
-        self.ui.update(
-            True,
-            random_value,
-            time.time() - self.started,
-        )
+        # Minimal skeleton - customize to read/write tags as needed.
+        # Example:
+        #   channel = self.fetch_channel_named("tag_values")
+        #   current_state = channel.get_aggregate()
 
-    @ui.callback("send_alert")
-    async def on_send_alert(self, new_value):
-        log.info(f"Sending alert: {self.ui.test_output.current_value}")
-        await self.publish_to_channel("significantAlerts", self.ui.test_output.current_value)
-        self.ui.send_alert.coerce(None)
-
-    @ui.callback("test_message")
-    async def on_text_parameter_change(self, new_value):
-        log.info(f"New value for test message: {new_value}")
-        # Set the value as an output to the corresponding variable is this case
-        self.ui.test_output.update(new_value)
-
-    @ui.callback("charge_mode")
-    async def on_state_command(self, new_value):
-        log.info(f"New value for state command: {new_value}")
+    def close(self):
+        """Called once after processing is complete."""
+        pass

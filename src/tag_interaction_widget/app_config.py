@@ -1,11 +1,12 @@
 from pathlib import Path
 
 from pydoover import config
+from pydoover.cloud.processor import SubscriptionConfig
 
 
 class TagInteractionWidgetConfig(config.Schema):
     def __init__(self):
-        pass
+        self.subscription = SubscriptionConfig(default="deployment_config")
 
 
 def export():

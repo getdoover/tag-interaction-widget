@@ -1,8 +1,14 @@
-from .application import TagInteractionWidgetProcessor
+from pydoover.cloud.processor import run_app
+
+from .application import TagInteractionWidgetApp
 from .app_config import TagInteractionWidgetConfig
 
 
 def handler(event, context):
     """Lambda handler entry point."""
-    processor = TagInteractionWidgetProcessor(**event)
-    processor.execute()
+    TagInteractionWidgetConfig.clear_elements()
+    return run_app(
+        TagInteractionWidgetApp(config=TagInteractionWidgetConfig()),
+        event,
+        context,
+    )

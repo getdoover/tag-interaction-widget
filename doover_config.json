@@ -32,7 +32,21 @@
             "$id": "",
             "title": "Application Config",
             "type": "object",
-            "properties": {},
+            "properties": {
+                "dv_proc_subscriptions": {
+                    "title": "Channel Subscription",
+                    "x-name": "dv_proc_subscriptions",
+                    "x-hidden": false,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-required": false,
+                    "description": "The name of the channel to subscribe to",
+                    "default": "deployment_config",
+                    "x-position": 0
+                }
+            },
             "additionalElements": true,
             "required": []
         },

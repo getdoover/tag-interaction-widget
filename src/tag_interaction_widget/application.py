@@ -38,3 +38,9 @@ class TagInteractionWidgetApp(Application):
         log.info(f"Aggregate update received for agent {self.agent_id}")
         await self.ui_manager.push_async(even_if_empty=True)
         log.info(f"Pushed ui_state with {WIDGET_NAME} widget entry")
+
+        # Ensure the tag_values channel exists for this agent.
+        # A PATCH with {} is a no-op on existing data but triggers
+        # the backend's get_or_create_channel logic.
+        await self.api.update_aggregate(self.agent_id, "tag_values", {})
+        log.info("Ensured tag_values channel exists")

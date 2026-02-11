@@ -85,6 +85,18 @@ function TagInteractionInner({ agent, agentId, ui_element_props }) {
   const [setStatus, setSetStatus] = useState(null);
   const [setError, setSetError] = useState(null);
 
+  const logToChannel = async (message) => {
+    console.log('[TagInteraction]', message);
+    try {
+      await dataProvider.updateAggregate(
+        { agentId, channelName: 'tag_interaction_logs' },
+        { latest_log: message, timestamp: new Date().toISOString() },
+      );
+    } catch (e) {
+      console.warn('[TagInteraction] Failed to write log to channel:', e);
+    }
+  };
+
   const handleGet = async () => {
     if (!getTagName.trim()) return;
     setGetError(null);
@@ -94,21 +106,32 @@ function TagInteractionInner({ agent, agentId, ui_element_props }) {
         agentId,
         channelName: 'tag_values',
       });
-      console.log('[TagInteraction] getChannel response:', JSON.stringify(ch, null, 2));
-      console.log('[TagInteraction] ch.data:', ch.data);
-      console.log('[TagInteraction] ch.aggregate:', ch.aggregate);
-      console.log('[TagInteraction] ch.aggregate?.data:', ch.aggregate?.data);
+      await logToChannel({
+        action: 'get_tag',
+        tag_name: getTagName.trim(),
+        response_keys: ch ? Object.keys(ch) : null,
+        has_data: ch?.data !== undefined,
+        has_aggregate: ch?.aggregate !== undefined,
+        aggregate_keys: ch?.aggregate ? Object.keys(ch.aggregate) : null,
+        aggregate_data_keys: ch?.aggregate?.data ? Object.keys(ch.aggregate.data) : null,
+        ch_data: ch?.data,
+        ch_aggregate_data: ch?.aggregate?.data,
+      });
       const data = ch.aggregate?.data || {};
-      console.log('[TagInteraction] resolved data:', data);
       const value = data[getTagName.trim()];
-      console.log('[TagInteraction] tag lookup:', getTagName.trim(), '->', value);
+      await logToChannel({
+        action: 'get_tag_result',
+        tag_name: getTagName.trim(),
+        value: value,
+        found: value !== undefined,
+      });
       if (value === undefined) {
         setGetTagResult('Not found');
       } else {
         setGetTagResult(JSON.stringify(value));
       }
     } catch (err) {
-      console.error('[TagInteraction] getChannel error:', err);
+      await logToChannel({ action: 'get_tag_error', error: err.message });
       setGetError(err.message || 'Failed to read tag');
     }
   };

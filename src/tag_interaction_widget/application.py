@@ -9,7 +9,7 @@ from .app_config import TagInteractionWidgetConfig
 log = logging.getLogger(__name__)
 
 WIDGET_NAME = "TagInteraction"
-FILE_CHANNEL = "https://cdn.jsdelivr.net/gh/getdoover/tag-interaction-widget@c8e2a9a/assets/TagInteraction.js"
+FILE_CHANNEL = "tag_interaction"
 
 
 class TagInteractionWidgetApp(Application):
@@ -37,4 +37,12 @@ class TagInteractionWidgetApp(Application):
         """Triggered when deployment_config aggregate is updated (i.e. on deployment)."""
         log.info(f"Aggregate update received for agent {self.agent_id}")
         await self.ui_manager.push_async(even_if_empty=True)
+
+        # Patch defaultOpen onto our application so the widget is
+        # expanded on page load instead of collapsed.
+        await self.api.update_aggregate(
+            self.agent_id,
+            "ui_state",
+            {"state": {"children": {self.app_key: {"defaultOpen": True}}}},
+        )
         log.info(f"Pushed ui_state with {WIDGET_NAME} widget entry")

@@ -9,7 +9,7 @@ from .app_config import TagInteractionWidgetConfig
 log = logging.getLogger(__name__)
 
 WIDGET_NAME = "TagInteraction"
-FILE_CHANNEL = "https://cdn.jsdelivr.net/gh/getdoover/tag-interaction-widget@main/assets/TagInteraction.js"
+FILE_CHANNEL = "https://cdn.jsdelivr.net/gh/getdoover/tag-interaction-widget@62ba3da/assets/TagInteraction.js"
 
 
 class TagInteractionWidgetApp(Application):

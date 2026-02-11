@@ -94,14 +94,21 @@ function TagInteractionInner({ agent, agentId, ui_element_props }) {
         agentId,
         channelName: 'tag_values',
       });
-      const data = ch.data || {};
+      console.log('[TagInteraction] getChannel response:', JSON.stringify(ch, null, 2));
+      console.log('[TagInteraction] ch.data:', ch.data);
+      console.log('[TagInteraction] ch.aggregate:', ch.aggregate);
+      console.log('[TagInteraction] ch.aggregate?.data:', ch.aggregate?.data);
+      const data = ch.aggregate?.data || {};
+      console.log('[TagInteraction] resolved data:', data);
       const value = data[getTagName.trim()];
+      console.log('[TagInteraction] tag lookup:', getTagName.trim(), '->', value);
       if (value === undefined) {
         setGetTagResult('Not found');
       } else {
         setGetTagResult(JSON.stringify(value));
       }
     } catch (err) {
+      console.error('[TagInteraction] getChannel error:', err);
       setGetError(err.message || 'Failed to read tag');
     }
   };
